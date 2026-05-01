@@ -1,65 +1,67 @@
-import Image from "next/image";
+import Link from "next/link";
+import Marquee from "@/components/Marquee";
+import FeaturedTiles from "@/components/FeaturedTiles";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Banner */}
+      <section className="relative bg-base-200 py-24 lg:py-32 overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1588661601614-2396bbfe2ce1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+            alt="Beautiful tile floor background"
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-base-200 via-base-200/90 to-transparent"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10 text-center lg:text-left flex flex-col items-center lg:items-start max-w-4xl lg:ml-12">
+          <span className="badge badge-primary badge-lg mb-6 shadow-sm">Premium Collection 2026</span>
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-base-content">
+            Discover Your <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Perfect</span> Aesthetic
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-base-content/80 mb-10 max-w-2xl leading-relaxed">
+            Elevate your space with our curated collection of artisan tiles. From classic ceramics to modern marble, find the perfect foundation for your design vision.
           </p>
+          <Link href="/all-tiles" className="btn btn-primary btn-lg shadow-xl hover:scale-105 transition-transform duration-300 rounded-full px-10">
+            Browse Now
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Marquee Section */}
+      <Marquee />
+
+      {/* Featured Tiles Section */}
+      <section className="py-20 bg-base-100">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Featured Collections</h2>
+            <div className="w-24 h-1 bg-primary rounded-full mb-6"></div>
+            <p className="text-base-content/70 max-w-2xl text-lg">
+              Hand-picked by our design experts, these premium tiles represent the pinnacle of craftsmanship and modern aesthetics.
+            </p>
+          </div>
+          
+          <FeaturedTiles />
         </div>
-      </main>
+      </section>
+      
+      {/* Decorative Call to Action */}
+      <section className="py-24 bg-neutral text-neutral-content relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary/20 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-secondary/20 blur-3xl"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl font-bold mb-6">Ready to transform your space?</h2>
+          <p className="text-xl text-neutral-content/80 mb-10 max-w-2xl mx-auto">
+            Create an account to save your favorite designs and get exclusive access to our newest collections.
+          </p>
+          <Link href="/register" className="btn btn-primary btn-lg rounded-full px-12">
+            Join Now
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
