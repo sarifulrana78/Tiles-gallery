@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Check, Ruler, Box, User, Palette } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Tile = {
   id: string;
@@ -52,23 +52,23 @@ export default function SingleTilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-base-100">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <p className="mt-4 font-medium text-lg text-base-content/70">Loading tile details...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+        <span className="loading loading-spinner loading-lg text-black"></span>
+        <p className="mt-4 text-gray-500 font-light tracking-widest text-xs uppercase">Loading specifications...</p>
       </div>
     );
   }
 
   if (error || !tile) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-base-100 px-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
         <div className="max-w-md text-center">
-          <h2 className="text-4xl font-bold text-error mb-4">Oops!</h2>
-          <p className="text-lg text-base-content/70 mb-8">
-            We couldn't find the tile you're looking for. It may have been removed or the link is incorrect.
+          <h2 className="text-4xl font-medium tracking-tight mb-4 text-black">Product Not Found</h2>
+          <p className="text-gray-500 mb-8 font-light leading-relaxed">
+            The collection item you are looking for may have been archived or removed from our catalog.
           </p>
-          <button onClick={() => router.back()} className="btn btn-primary">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Go Back
+          <button onClick={() => router.back()} className="text-sm font-bold tracking-widest uppercase border-b-2 border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-all">
+            Return to Gallery
           </button>
         </div>
       </div>
@@ -76,114 +76,94 @@ export default function SingleTilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-6xl">
-        {/* Breadcrumb & Navigation */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="breadcrumbs text-sm font-medium">
-            <ul>
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/all-tiles">Gallery</Link></li>
-              <li className="text-primary">{tile.title}</li>
-            </ul>
-          </div>
-          <Link href="/all-tiles" className="btn btn-ghost btn-sm">
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Gallery
+    <div className="min-h-screen bg-white pt-24 pb-32">
+      <div className="container mx-auto px-4 md:px-12">
+        {/* Navigation */}
+        <div className="mb-12">
+          <Link href="/all-tiles" className="inline-flex items-center text-xs font-bold tracking-widest uppercase hover:text-gray-500 transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Collections
           </Link>
         </div>
 
-        <div className="bg-base-100 rounded-3xl shadow-2xl overflow-hidden border border-base-200">
-          <div className="flex flex-col lg:flex-row">
-            {/* Visuals: Large High-Res Preview */}
-            <div className="lg:w-1/2 relative bg-neutral-100 flex items-center justify-center min-h-[400px] lg:min-h-[600px] p-8 lg:p-12 group overflow-hidden">
-              <div className="absolute inset-0 bg-base-300 opacity-20"></div>
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+          {/* Visuals: Large High-Res Preview */}
+          <div className="lg:w-3/5">
+            <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
               <img
                 src={tile.image}
                 alt={tile.title}
-                className="w-full h-full object-cover rounded-2xl shadow-2xl z-10 transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
-              {/* Category Badge */}
-              <div className="absolute top-6 left-6 z-20">
-                <span className="badge badge-primary badge-lg uppercase tracking-widest font-bold shadow-md">
-                  {tile.category}
-                </span>
+            </div>
+          </div>
+
+          {/* Info Details */}
+          <div className="lg:w-2/5 flex flex-col justify-center">
+            <div className="mb-12">
+              <span className="text-xs text-gray-400 font-bold tracking-widest uppercase mb-4 block">
+                {tile.category} Collection
+              </span>
+              <h1 className="text-5xl md:text-6xl font-medium text-black leading-[1.1] tracking-tight mb-6">
+                {tile.title}
+              </h1>
+              <span className="text-3xl font-light text-black block mb-8">
+                ${tile.price} <span className="text-lg text-gray-400">/ sq. ft.</span>
+              </span>
+              
+              <div className="prose prose-lg max-w-none text-gray-600 font-light leading-relaxed">
+                <p>{tile.description}</p>
               </div>
             </div>
 
-            {/* Info Details */}
-            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-              <div className="mb-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h1 className="text-4xl md:text-5xl font-extrabold text-base-content leading-tight">
-                    {tile.title}
-                  </h1>
-                  <span className="text-3xl font-bold text-primary ml-4 shrink-0">
-                    ${tile.price}
+            {/* Specifications Grid */}
+            <div className="border-t border-gray-200 py-8 mb-8">
+              <h3 className="text-xs font-bold tracking-widest uppercase text-black mb-8">Specifications</h3>
+              <dl className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 text-sm">
+                <div>
+                  <dt className="text-gray-400 font-light mb-1">Dimensions</dt>
+                  <dd className="font-medium text-black">{tile.dimensions}</dd>
+                </div>
+                <div>
+                  <dt className="text-gray-400 font-light mb-1">Material</dt>
+                  <dd className="font-medium text-black">{tile.material}</dd>
+                </div>
+                <div>
+                  <dt className="text-gray-400 font-light mb-1">Finish / Style</dt>
+                  <dd className="font-medium text-black">{tile.style}</dd>
+                </div>
+                <div>
+                  <dt className="text-gray-400 font-light mb-1">Manufacturer</dt>
+                  <dd className="font-medium text-black">{tile.creator}</dd>
+                </div>
+                <div>
+                  <dt className="text-gray-400 font-light mb-1">Availability</dt>
+                  <dd className={`font-medium ${tile.inStock ? 'text-black' : 'text-red-500'}`}>
+                    {tile.inStock ? 'In Stock - Ready to Ship' : 'Currently Out of Stock'}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* Tags */}
+            <div className="mb-12">
+              <div className="flex flex-wrap gap-2">
+                {tile.tags.map((tag, i) => (
+                  <span key={i} className="px-4 py-2 bg-gray-100 text-xs font-bold tracking-widest uppercase text-gray-600">
+                    {tag}
                   </span>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm font-medium text-base-content/60 mb-8 pb-8 border-b border-base-200">
-                  <div className="flex items-center gap-1.5">
-                    <User className="w-4 h-4" />
-                    <span>{tile.creator}</span>
-                  </div>
-                  <div className="w-1.5 h-1.5 rounded-full bg-base-300"></div>
-                  <div className={`flex items-center gap-1.5 ${tile.inStock ? 'text-success' : 'text-error'}`}>
-                    <Check className="w-4 h-4" />
-                    <span>{tile.inStock ? 'In Stock' : 'Out of Stock'}</span>
-                  </div>
-                </div>
+                ))}
               </div>
+            </div>
 
-              <div className="prose prose-lg mb-8 max-w-none">
-                <p className="text-base-content/80 leading-relaxed">
-                  {tile.description}
-                </p>
-              </div>
-
-              {/* Specifications Grid */}
-              <div className="grid grid-cols-2 gap-6 mb-10 bg-base-200/50 p-6 rounded-2xl">
-                <div>
-                  <h3 className="text-sm font-bold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <Ruler className="w-4 h-4" /> Dimensions
-                  </h3>
-                  <p className="text-lg font-semibold">{tile.dimensions}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <Box className="w-4 h-4" /> Material
-                  </h3>
-                  <p className="text-lg font-semibold">{tile.material}</p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-base-content/50 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <Palette className="w-4 h-4" /> Style
-                  </h3>
-                  <p className="text-lg font-semibold">{tile.style}</p>
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div className="mb-10">
-                <h3 className="text-sm font-bold text-base-content/50 uppercase tracking-wider mb-4">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {tile.tags.map((tag, i) => (
-                    <span key={i} className="badge badge-ghost badge-md px-4 py-3 bg-base-200 hover:bg-base-300 cursor-default transition-colors">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-4 mt-auto">
-                <button className="btn btn-primary btn-lg flex-1 rounded-full shadow-lg hover:scale-105 transition-transform" disabled={!tile.inStock}>
-                  Add to Cart
-                </button>
-                <button className="btn btn-outline btn-lg rounded-full px-8 hover:scale-105 transition-transform">
-                  Save
-                </button>
-              </div>
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-4 mt-auto">
+              <button 
+                className="w-full bg-black text-white py-5 text-sm font-bold tracking-widest uppercase hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:text-gray-500 flex items-center justify-center gap-2" 
+                disabled={!tile.inStock}
+              >
+                {tile.inStock ? 'Request a Sample' : 'Out of Stock'}
+                {tile.inStock && <ArrowRight className="w-4 h-4" />}
+              </button>
             </div>
           </div>
         </div>
