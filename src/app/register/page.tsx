@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp, signIn } from "@/lib/auth-client";
 import { Mail, Lock, User, Image as ImageIcon } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -30,12 +31,15 @@ export default function RegisterPage() {
       });
 
       if (error) {
+        toast.error(error.message || "Registration failed");
         console.error("Sign up error:", error);
         setError(error.message || "Failed to register. Please check your connection.");
       } else {
+        toast.success("Account created successfully!");
         router.push("/login");
       }
     } catch (err: any) {
+      toast.error("An unexpected error occurred during registration");
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -46,11 +50,17 @@ export default function RegisterPage() {
     setGoogleLoading(true);
     setError("");
     try {
-      await signIn.social({
+      const { error } = await signIn.social({
         provider: "google",
         callbackURL: "/",
       });
+      if (error) {
+        toast.error(error.message || "Google registration failed");
+      } else {
+        toast.success("Connecting to Google...");
+      }
     } catch (err: any) {
+      toast.error("Google sign-in exception occurred");
       setError(err.message || "Failed to register with Google.");
       setGoogleLoading(false);
     }

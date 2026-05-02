@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import { Mail, Lock } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,12 +27,15 @@ export default function LoginPage() {
       });
 
       if (error) {
+        toast.error(error.message || "Login failed");
         setError(error.message || "Failed to login. Please check your credentials.");
       } else {
+        toast.success("Welcome back!");
         router.push("/");
         router.refresh();
       }
     } catch (err: any) {
+      toast.error("An unexpected error occurred");
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
@@ -47,11 +51,15 @@ export default function LoginPage() {
         callbackURL: "/",
       });
       if (error) {
+        toast.error(error.message || "Google login failed");
         console.error("Google Sign-In error:", error);
         setError(error.message || "Failed to login with Google.");
         setGoogleLoading(false);
+      } else {
+        toast.success("Logging in with Google...");
       }
     } catch (err: any) {
+      toast.error("Google login exception occurred");
       console.error("Google Sign-In exception:", err);
       setError(err.message || "Failed to login with Google.");
       setGoogleLoading(false);

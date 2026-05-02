@@ -19,6 +19,7 @@ Tiles Gallery is a premium architectural platform designed to showcase luxury ti
 - **next**: 16.2.4
 - **react**: 19.2.4
 - **better-auth**: ^1.6.9
+- **sonner**: ^2.0.1
 - **mongodb**: ^7.2.0
 - **daisyui**: ^5.5.19
 - **lucide-react**: ^1.14.0

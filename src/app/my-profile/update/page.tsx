@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, authClient } from "@/lib/auth-client";
 import { User, Image as ImageIcon, ArrowLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function UpdateProfilePage() {
   const router = useRouter();
@@ -36,8 +37,10 @@ export default function UpdateProfilePage() {
       });
 
       if (error) {
+        toast.error(error.message || "Failed to update profile");
         setError(error.message || "Failed to update profile.");
       } else {
+        toast.success("Profile updated successfully!");
         setSuccess(true);
         setTimeout(() => {
           router.push("/my-profile");
@@ -45,6 +48,7 @@ export default function UpdateProfilePage() {
         }, 1500);
       }
     } catch (err: any) {
+      toast.error("An unexpected error occurred");
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);

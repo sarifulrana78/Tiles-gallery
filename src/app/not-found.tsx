@@ -1,17 +1,32 @@
 import Link from "next/link";
-import { Home } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center bg-base-100 px-4 text-center">
-      <h1 className="text-9xl font-black text-primary/20">404</h1>
-      <h2 className="text-4xl font-bold mt-4 mb-2">Page Not Found</h2>
-      <p className="text-lg text-base-content/60 max-w-md mx-auto mb-8">
-        The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
-      </p>
-      <Link href="/" className="btn btn-primary btn-lg rounded-full px-8">
-        <Home className="w-5 h-5 mr-2" /> Back to Home
-      </Link>
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 text-center">
+      <div className="max-w-md">
+        <h1 className="text-[120px] font-black tracking-tighter text-gray-100 leading-none mb-4 select-none">
+          404
+        </h1>
+        <h2 className="text-3xl font-medium tracking-tight text-black mb-6">
+          Architectural Deviation
+        </h2>
+        <p className="text-gray-500 font-light leading-relaxed mb-12">
+          The space you are trying to access does not exist within our current collections. It may have been moved or the coordinate is incorrect.
+        </p>
+        
+        <Link 
+          href="/" 
+          className="inline-flex items-center gap-3 bg-black text-white px-10 py-5 text-xs font-bold tracking-widest uppercase hover:bg-gray-800 transition-all group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Return to Foundation
+        </Link>
+      </div>
+      
+      <div className="absolute bottom-12 left-0 right-0 flex justify-center opacity-10 pointer-events-none">
+        <span className="text-xs font-bold tracking-[1em] uppercase text-black">Tiles Gallery Portfolio</span>
+      </div>
     </div>
   );
 }

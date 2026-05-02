@@ -6,11 +6,10 @@ import "swiper/css";
 
 export default function Marquee() {
   const items = [
-    "NEW ARRIVALS: CERAMIC BLUE",
-    "WEEKLY FEATURE: MODERN GEOMETRICS",
-    "JOIN THE EXCLUSIVE COMMUNITY",
-    "COMPLIMENTARY SHIPPING OVER $500",
-    "DISCOVER HAND-CRAFTED TERRACOTTA",
+    "New Arrivals: Ceramic Blue Tile",
+    "Weekly Feature: Modern Geometric Patterns",
+    "Join the Community and Explore Exclusive Designs...",
+    "Complimentary Shipping on Architectural Collections",
   ];
 
   return (
