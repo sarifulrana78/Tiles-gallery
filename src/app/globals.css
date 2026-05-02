@@ -6,6 +6,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  /* DaisyUI Minimalist/Luxury overrides for light theme */
+  --p: 0 0% 0%; /* Primary color: Black */
+  --pc: 0 0% 100%; /* Primary content: White */
+  --s: 0 0% 40%; /* Secondary: Dark Gray */
+  --sc: 0 0% 100%; /* Secondary content: White */
+  
+  /* Sharp corners */
+  --rounded-box: 0rem;
+  --rounded-btn: 0rem;
+  --rounded-badge: 0rem;
+}
+
 body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  letter-spacing: -0.02em; /* Tighter modern tracking */
 }
+
