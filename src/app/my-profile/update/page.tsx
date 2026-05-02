@@ -19,7 +19,7 @@ export default function UpdateProfilePage() {
   useEffect(() => {
     if (session) {
       setName(session.user.name || "");
-      setImage(session.user.image || session.user.photoURL || "");
+      setImage(session.user.image || "");
     }
   }, [session]);
 
@@ -33,8 +33,6 @@ export default function UpdateProfilePage() {
       const { data, error } = await authClient.updateUser({
         name: name,
         image: image,
-        // Also update photoURL if we are using that custom field
-        photoURL: image,
       });
 
       if (error) {
