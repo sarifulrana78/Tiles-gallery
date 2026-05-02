@@ -36,37 +36,43 @@ export default function FeaturedTiles() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <p className="mt-4 text-neutral-content/60">Loading featured collections...</p>
+        <span className="loading loading-spinner loading-lg text-black"></span>
+        <p className="mt-4 text-gray-500 font-light tracking-widest text-xs uppercase">Loading collection...</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
       {tiles.map((tile) => (
-        <div key={tile.id} className="card bg-base-100 shadow-xl group overflow-hidden">
-          <figure className="relative h-64 overflow-hidden">
-            <img
-              src={tile.image}
-              alt={tile.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div className="absolute top-4 right-4">
-              <span className="badge badge-secondary badge-lg font-semibold shadow-sm">${tile.price}</span>
+        <div key={tile.id} className="group cursor-pointer">
+          <Link href={`/tile/${tile.id}`} className="block">
+            <div className="relative h-[400px] overflow-hidden bg-gray-100 mb-6">
+              <img
+                src={tile.image}
+                alt={tile.title}
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute top-4 left-4">
+                <span className="bg-white/90 text-black text-xs font-bold tracking-widest uppercase px-3 py-1">
+                  ${tile.price}
+                </span>
+              </div>
             </div>
-          </figure>
-          <div className="card-body p-6">
-            <div className="flex justify-between items-start mb-2">
-              <h2 className="card-title text-xl">{tile.title}</h2>
+            
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-400 font-bold tracking-widest uppercase mb-2">
+                {tile.category}
+              </span>
+              <h3 className="text-xl font-medium tracking-tight text-black mb-3 group-hover:text-gray-500 transition-colors">
+                {tile.title}
+              </h3>
+              <div className="flex items-center text-sm font-bold tracking-widest uppercase text-black">
+                <span className="group-hover:mr-2 transition-all">Explore</span>
+                <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+              </div>
             </div>
-            <p className="text-base-content/70 text-sm line-clamp-2 mb-4">{tile.description}</p>
-            <div className="card-actions justify-end mt-auto">
-              <Link href={`/tile/${tile.id}`} className="btn btn-primary btn-sm w-full group-hover:btn-accent transition-colors">
-                View Details <ArrowRight className="w-4 h-4 ml-1" />
-              </Link>
-            </div>
-          </div>
+          </Link>
         </div>
       ))}
     </div>
