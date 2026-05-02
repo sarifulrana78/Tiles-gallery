@@ -2,92 +2,115 @@
 
 import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
-import { User, Mail, Calendar, Edit3 } from "lucide-react";
+import { User, Mail, Calendar, Edit3, ArrowLeft } from "lucide-react";
+import { useState } from "react";
 
 export default function MyProfilePage() {
   const { data: session, isPending } = useSession();
+  const [imageError, setImageError] = useState(false);
+
+  if (session?.user?.image) {
+    console.log("User Image URL:", session.user.image);
+  }
 
   if (isPending) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-base-100">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-        <p className="mt-4 font-medium text-base-content/70">Loading profile...</p>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <span className="loading loading-spinner loading-lg text-black"></span>
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-base-100">
-        <h2 className="text-2xl font-bold mb-4">You are not logged in</h2>
-        <Link href="/login" className="btn btn-primary">Go to Login</Link>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
+        <h2 className="text-2xl font-medium mb-6">Access Denied</h2>
+        <Link href="/login" className="bg-black text-white px-8 py-3 text-sm font-bold tracking-widest uppercase hover:bg-gray-800 transition-colors">
+          Go to Login
+        </Link>
       </div>
     );
   }
 
-  const userImage = session.user.image || session.user.photoURL;
+  const userImage = session.user.image;
 
   return (
-    <div className="min-h-[80vh] bg-base-200 py-12 px-4">
-      <div className="container mx-auto max-w-3xl">
-        <div className="card bg-base-100 shadow-2xl">
-          <div className="bg-neutral h-32 w-full rounded-t-2xl relative">
-            <div className="absolute -bottom-16 left-8">
-              <div className="avatar">
-                <div className="w-32 rounded-full ring ring-base-100 ring-offset-base-100 ring-offset-2 bg-base-300 flex items-center justify-center">
-                  {userImage ? (
-                    <img src={userImage} alt={session.user.name} />
-                  ) : (
-                    <User className="w-16 h-16 text-base-content/50" />
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="absolute top-4 right-4">
-              <Link href="/my-profile/update" className="btn btn-primary btn-sm shadow-md">
-                <Edit3 className="w-4 h-4 mr-1" /> Update Information
-              </Link>
-            </div>
-          </div>
-          
-          <div className="card-body pt-20 px-8 pb-12">
-            <h1 className="text-3xl font-bold mb-1">{session.user.name}</h1>
-            <p className="text-base-content/60 font-medium mb-8">Member Profile</p>
-            
-            <div className="divider mb-8">Account Details</div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <User className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base-content/50 text-sm uppercase tracking-wider mb-1">Full Name</h3>
-                  <p className="text-lg font-medium">{session.user.name}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Mail className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base-content/50 text-sm uppercase tracking-wider mb-1">Email Address</h3>
-                  <p className="text-lg font-medium">{session.user.email}</p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-white pt-32 pb-24 px-4 lg:px-12">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center gap-4 mb-12">
+          <Link href="/" className="group flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-gray-400 hover:text-black transition-colors">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
+        </div>
 
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Calendar className="w-6 h-6 text-primary" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-start">
+          {/* Profile Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="aspect-square bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden mb-8">
+              {userImage && !imageError ? (
+                <img 
+                  src={userImage} 
+                  alt={session.user.name} 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-4 text-gray-300">
+                  <User className="w-24 h-24 stroke-[1]" />
+                  <span className="text-[10px] font-bold tracking-[0.2em] uppercase">No Profile Image</span>
                 </div>
-                <div>
-                  <h3 className="font-bold text-base-content/50 text-sm uppercase tracking-wider mb-1">Account Created</h3>
-                  <p className="text-lg font-medium">
-                    {session.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString() : 'Recently'}
-                  </p>
+              )}
+            </div>
+            
+            <h1 className="text-3xl font-medium tracking-tight mb-2 text-black">{session.user.name}</h1>
+            <p className="text-gray-500 font-light text-sm mb-8">Registered Member</p>
+            
+            <Link 
+              href="/my-profile/update" 
+              className="w-full flex items-center justify-center gap-3 bg-black text-white py-4 text-xs font-bold tracking-widest uppercase hover:bg-gray-800 transition-colors"
+            >
+              <Edit3 className="w-4 h-4" />
+              Update Profile
+            </Link>
+          </div>
+
+          {/* Account Details */}
+          <div className="lg:col-span-2 border-t border-gray-100 pt-8 lg:pt-0 lg:border-t-0 lg:border-l lg:pl-16">
+            <div className="space-y-12">
+              <section>
+                <h2 className="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400 mb-8">Account Information</h2>
+                
+                <div className="grid grid-cols-1 gap-10">
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-black">Full Name</span>
+                    <p className="text-xl font-light text-gray-800">{session.user.name}</p>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-black">Email Address</span>
+                    <p className="text-xl font-light text-gray-800">{session.user.email}</p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-black">Member Since</span>
+                    <p className="text-xl font-light text-gray-800">
+                      {session.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recently Joined'}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </section>
+
+              <section className="pt-12 border-t border-gray-100">
+                <h2 className="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400 mb-8">Saved Collections</h2>
+                <div className="bg-gray-50 p-12 text-center border border-dashed border-gray-200">
+                  <p className="text-gray-400 font-light text-sm italic">You haven't saved any tiles to your collection yet.</p>
+                  <Link href="/all-tiles" className="inline-block mt-6 text-[10px] font-bold tracking-widest uppercase text-black hover:underline underline-offset-8">
+                    Browse Tiles
+                  </Link>
+                </div>
+              </section>
             </div>
           </div>
         </div>
