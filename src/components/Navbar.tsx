@@ -4,10 +4,21 @@ import Link from "next/link";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Menu, User, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
+  const [scrolled, setScrolled] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -15,74 +26,75 @@ export default function Navbar() {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-sm px-4 lg:px-8 sticky top-0 z-50">
+    <div className={`navbar fixed top-0 z-50 transition-all duration-300 px-4 lg:px-12 py-4 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100" : "bg-transparent"}`}>
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <Menu className="h-5 w-5" />
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden -ml-2">
+            <Menu className="h-6 w-6" />
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            className="menu menu-lg dropdown-content bg-white rounded-none z-[1] mt-3 w-64 p-4 shadow-2xl border border-gray-100"
           >
-            <li><Link href="/">Home</Link></li>
-            <li><Link href="/all-tiles">All Tiles</Link></li>
-            {session && <li><Link href="/my-profile">My Profile</Link></li>}
+            <li><Link href="/" className="font-semibold text-lg tracking-wide uppercase">Home</Link></li>
+            <li><Link href="/all-tiles" className="font-semibold text-lg tracking-wide uppercase">Collections</Link></li>
+            {session && <li><Link href="/my-profile" className="font-semibold text-lg tracking-wide uppercase">Profile</Link></li>}
           </ul>
         </div>
-        <Link href="/" className="btn btn-ghost text-xl font-bold gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content">
-            TG
-          </div>
-          <span className="hidden sm:inline">Tiles Gallery</span>
+        <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+          <span className="text-2xl font-black tracking-tighter uppercase">TILES<span className="font-light">GALLERY</span></span>
         </Link>
       </div>
+      
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 gap-2">
-          <li><Link href="/" className="font-medium">Home</Link></li>
-          <li><Link href="/all-tiles" className="font-medium">All Tiles</Link></li>
-          {session && <li><Link href="/my-profile" className="font-medium">My Profile</Link></li>}
+        <ul className="menu menu-horizontal px-1 gap-8">
+          <li><Link href="/" className="text-sm font-bold tracking-widest uppercase hover:text-black/60 transition-colors bg-transparent!">HOME</Link></li>
+          <li><Link href="/all-tiles" className="text-sm font-bold tracking-widest uppercase hover:text-black/60 transition-colors bg-transparent!">COLLECTIONS</Link></li>
+          {session && <li><Link href="/my-profile" className="text-sm font-bold tracking-widest uppercase hover:text-black/60 transition-colors bg-transparent!">PROFILE</Link></li>}
         </ul>
       </div>
-      <div className="navbar-end gap-2">
+      
+      <div className="navbar-end gap-4">
         {isPending ? (
           <span className="loading loading-spinner loading-sm"></span>
         ) : session ? (
           <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full bg-base-300 flex items-center justify-center">
-                {session.user.image || session.user.photoURL ? (
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar hover:bg-gray-100 transition-colors">
+              <div className="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center overflow-hidden">
+                {session.user.image && !imageError ? (
                   <img
                     alt="User Avatar"
-                    src={session.user.image || session.user.photoURL || ""}
+                    src={session.user.image || ""}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={() => setImageError(true)}
                   />
                 ) : (
-                  <User className="w-6 h-6 m-auto mt-2 text-base-content/50" />
+                  <User className="w-5 h-5 text-gray-500" />
                 )}
               </div>
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-md dropdown-content bg-white rounded-none z-[1] mt-4 w-56 p-2 shadow-2xl border border-gray-100"
             >
-              <li className="px-4 py-2 font-semibold border-b border-base-200 mb-1 opacity-70">
+              <li className="px-4 py-3 font-bold border-b border-gray-100 mb-2 truncate">
                 {session.user.name}
               </li>
               <li>
-                <Link href="/my-profile" className="justify-between">
-                  Profile
-                  <span className="badge badge-primary badge-sm">New</span>
+                <Link href="/my-profile" className="hover:bg-gray-50 uppercase text-xs tracking-wider font-bold py-3">
+                  My Account
                 </Link>
               </li>
               <li>
-                <button onClick={handleSignOut} className="text-error">
-                  <LogOut className="w-4 h-4 mr-2" /> Logout
+                <button onClick={handleSignOut} className="text-red-600 hover:bg-red-50 uppercase text-xs tracking-wider font-bold py-3">
+                  Sign Out
                 </button>
               </li>
             </ul>
           </div>
         ) : (
-          <Link href="/login" className="btn btn-primary">
+          <Link href="/login" className="btn btn-outline border-black text-black hover:bg-black hover:text-white rounded-none px-8 font-bold tracking-widest uppercase text-xs">
             Login
           </Link>
         )}
